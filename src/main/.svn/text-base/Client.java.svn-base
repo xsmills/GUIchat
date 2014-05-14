@@ -1,0 +1,75 @@
+package main;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+/**
+ * GUI chat client runner.
+ * NOTE!!! It may be easier to test the server using telnet for now!!
+ * -Xola.
+ */
+public class Client {
+
+    /**
+     * Start a GUI chat client.
+     *
+     */
+	
+	private Socket chatSocket;
+	
+
+	public Client(int port) throws IOException {
+		chatSocket = new Socket("localhost", port);
+	}
+	
+	
+    public void connect() throws IOException {
+        // YOUR CODE HERE
+        // It is not required (or recommended) to implement the client in
+        // this runner class.
+    
+		PrintWriter out = null;
+		BufferedReader in = null;
+
+		try {
+			
+			out = new PrintWriter(chatSocket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(
+					chatSocket.getInputStream()));
+			System.out.println("Ready to connect...");
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host: localhost.");
+			System.exit(1);
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for "
+					+ "the connection to: localhost.");
+			System.exit(1);
+		}
+
+		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+		
+		String userInput;
+
+		while ((userInput = stdIn.readLine()) != null) {
+		    out.println(userInput);
+		    out.flush();
+		    //System.out.println(">>> " + in.readLine());
+		}
+
+		
+
+        out.close();
+		in.close();
+		stdIn.close();
+		chatSocket.close();
+    	
+ 
+    }
+    
+    
+
+}
